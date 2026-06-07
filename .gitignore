@@ -1,0 +1,8 @@
+.DS_Store
+.vercel/
+node_modules/
+*.log
+
+# Local design extraction and QA artifacts.
+docs/extracted/
+docs/screenshots/

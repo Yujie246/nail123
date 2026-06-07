@@ -1,0 +1,10 @@
+{
+  "name": "nail-alpha-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "甲市雷达 Nail Alpha 静态 Web 原型。",
+  "scripts": {
+    "check": "node --check app.js",
+    "serve": "python3 -m http.server 4173"
+  }
+}
