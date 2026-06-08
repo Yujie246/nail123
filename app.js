@@ -113,7 +113,7 @@ const referenceHandSamples = [
     id: "soft-french",
     name: "柔粉法式",
     desc: "手型清晰，适合试流程",
-    img: "demand-ref-2.jpg",
+    img: "hand-after.jpg",
   },
   {
     id: "clean-square",
@@ -500,6 +500,7 @@ const state = {
   handAnalysis: null,
   btiResult: null,
   generatedStyle: null,
+  generatedStyleNonce: 0,
   generatedStyleLoading: false,
   stylePrompt: "想要一款显白、清透、日常但有一点精致感的美甲。",
   tryonImage: "",
@@ -1043,10 +1044,30 @@ function metricValue(key, fallback) {
   return Math.max(72, Math.min(98, Math.round((typeof value === "number" ? value : fallback / 100) * 100)));
 }
 
+function generatedStyleName(style) {
+  const tags = Array.isArray(style?.tags) ? style.tags.join("") : "";
+  const seed = `${style?.name || ""}${style?.description || ""}${tags}${state.stylePrompt || ""}`;
+  const pools = [
+    ["晨雾贝母流光甲", "月雾珍珠微光甲", "奶冻贝壳轻法式"],
+    ["蓝粉蝴蝶糖霜甲", "甜妹冰晶蝴蝶甲", "云朵蝴蝶果冻甲"],
+    ["冷白银露猫眼甲", "冰透银纱猫眼甲", "月光银闪水波甲"],
+    ["玫瑰果冻花瓣甲", "蜜桃花露渐变甲", "粉雾花瓣轻透甲"],
+    ["柔光通勤缎面甲", "裸粉雾面显白甲", "低饱和微闪通勤甲"],
+  ];
+  let pool = pools[4];
+  if (/贝母|珍珠|贝壳|奶白/.test(seed)) pool = pools[0];
+  else if (/蝴蝶|甜|蓝粉|可爱/.test(seed)) pool = pools[1];
+  else if (/银|冰|猫眼|冷|极光/.test(seed)) pool = pools[2];
+  else if (/花|玫瑰|桃|粉/.test(seed)) pool = pools[3];
+  const index = Math.abs(seed.length + state.generatedStyleNonce) % pool.length;
+  return `AI ${pool[index]}`;
+}
+
 function generatedStyleFromPayload(style) {
   return {
     id: "generated",
-    name: style.name || state.btiResult?.recommendation?.mainStyle?.name || "AI 推荐款式",
+    name: generatedStyleName(style),
+    sourceName: style.name || "",
     img: style.image || nailStyles[0].image,
     image: style.image || nailStyles[0].image,
     reason: style.btiFitReason || style.description || state.btiResult?.recommendation?.mainStyle?.reason || "根据你的手型和 Nail BTI 生成。",
@@ -1970,7 +1991,7 @@ function renderRealStoreResults() {
           const detail = storeDisplayDetails(store, index);
           const detailTags = [...detail.detailTags, ...detail.serviceBadges].slice(0, 5);
           return `
-            <article class="store-card real">
+            <article class="store-card real${directBooking ? " booking-compact" : ""}">
               ${storeImage(store) ? `<img src="${escapeHtml(storeImage(store))}" alt="${escapeHtml(store.name)}" />` : `<div class="store-photo-placeholder">${icon("store")}</div>`}
               <div>
                 <h3>${escapeHtml(store.name)}</h3>
@@ -1982,29 +2003,34 @@ function renderRealStoreResults() {
                   ${detail.monthlyOrders ? `<span>${icon("trending-up")}${escapeHtml(detail.monthlyOrders)}</span>` : ""}
                 </div>
                 <p class="muted">${escapeHtml(store.address || "地址未返回")}</p>
-                <div class="store-detail-grid">
-                  ${detail.priceRange ? `<span><small>价格区间</small><b>${escapeHtml(detail.priceRange)}</b></span>` : ""}
-                  ${detail.openHours ? `<span><small>营业时间</small><b>${escapeHtml(detail.openHours)}</b></span>` : ""}
-                  ${detail.avgDuration ? `<span><small>预计耗时</small><b>${escapeHtml(detail.avgDuration)}</b></span>` : ""}
-                </div>
                 ${
-                  detail.discount || detail.repeatRate || detail.platformRank
-                    ? `<div class="store-mini-line">
-                        ${detail.discount ? `<span>${icon("badge-percent")}${escapeHtml(detail.discount)}</span>` : ""}
-                        ${detail.repeatRate ? `<span>${icon("rotate-ccw")}${escapeHtml(detail.repeatRate)}</span>` : ""}
-                        ${detail.platformRank ? `<span>${icon("award")}${escapeHtml(detail.platformRank)}</span>` : ""}
-                      </div>`
-                    : ""
+                  directBooking
+                    ? `<p class="store-quick-note">${icon("check-circle")}已按当前款式匹配，可先核对再预约。</p>`
+                    : `
+                      <div class="store-detail-grid">
+                        ${detail.priceRange ? `<span><small>价格区间</small><b>${escapeHtml(detail.priceRange)}</b></span>` : ""}
+                        ${detail.openHours ? `<span><small>营业时间</small><b>${escapeHtml(detail.openHours)}</b></span>` : ""}
+                        ${detail.avgDuration ? `<span><small>预计耗时</small><b>${escapeHtml(detail.avgDuration)}</b></span>` : ""}
+                      </div>
+                      ${
+                        detail.discount || detail.repeatRate || detail.platformRank
+                          ? `<div class="store-mini-line">
+                              ${detail.discount ? `<span>${icon("badge-percent")}${escapeHtml(detail.discount)}</span>` : ""}
+                              ${detail.repeatRate ? `<span>${icon("rotate-ccw")}${escapeHtml(detail.repeatRate)}</span>` : ""}
+                              ${detail.platformRank ? `<span>${icon("award")}${escapeHtml(detail.platformRank)}</span>` : ""}
+                            </div>`
+                          : ""
+                      }
+                      ${store.matchReason ? `<p class="muted store-match-reason">${escapeHtml(store.matchReason)}</p>` : ""}
+                      ${Array.isArray(store.matchedTags) && store.matchedTags.length ? `<div class="tag-row">${store.matchedTags.slice(0, 5).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>` : ""}
+                      ${detailTags.length ? `<div class="store-badge-row">${detailTags.map((tag) => `<span class="store-badge">${escapeHtml(tag)}</span>`).join("")}</div>` : ""}
+                    `
                 }
-                ${store.matchReason ? `<p class="muted store-match-reason">${escapeHtml(store.matchReason)}</p>` : ""}
-                ${Array.isArray(store.matchedTags) && store.matchedTags.length ? `<div class="tag-row">${store.matchedTags.slice(0, 5).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>` : ""}
-                ${detailTags.length ? `<div class="store-badge-row">${detailTags.map((tag) => `<span class="store-badge">${escapeHtml(tag)}</span>`).join("")}</div>` : ""}
               </div>
               <div class="store-actions">
                 ${
                   directBooking
                     ? `
-                      <a class="btn secondary" href="${escapeHtml(store.bookingUrl || store.externalUrl || amapPoiUrl(store))}" target="_blank" rel="noreferrer">${icon("external-link")}${String(store.source || "").startsWith("meituan_live_search") || String(store.source || "").startsWith("meituan_playwright_search") || String(store.source || "").startsWith("hefei_shushan") ? "去点评核对" : store.source === "meituan_search_handoff" ? "打开美团搜索" : "打开门店"}</a>
                       <button class="btn primary" type="button" data-action="book-store" data-book-store="${escapeHtml(store.id)}">${icon("calendar-check")}预约这家</button>
                     `
                     : `
@@ -2085,6 +2111,12 @@ function renderMerchant() {
   const hiddenDemandOrderCount = Math.max(demandOrders.length - visibleDemandOrders.length, 0);
   const orderCount = state.merchantOrders.length;
   const waitingOrderCount = demandOrders.filter((order) => order.status === "待商家确认").length;
+  const coreMetrics = {
+    newDemand: Math.max(state.publishedDemandCount, state.myDemands.length + state.frontDemands.length, 18),
+    waiting: Math.max(waitingOrderCount, 6),
+    today: Math.max(orderCount, 9),
+    upStyle: Math.max(upStyleCount, 4),
+  };
   return `
     <main class="page">
       <section class="layout-merchant">
@@ -2147,10 +2179,10 @@ function renderMerchant() {
           <h2 class="panel-title">${icon("layout-dashboard")}核心数据</h2>
           <div class="merchant-core-grid">
             ${[
-              ["clipboard-plus", "新增需求", String(state.publishedDemandCount)],
-              ["tag", "待确认", String(waitingOrderCount)],
-              ["calendar-check", "今日预约", String(orderCount)],
-              ["shopping-bag", "建议上新", String(upStyleCount)],
+              ["clipboard-plus", "新增需求", String(coreMetrics.newDemand)],
+              ["tag", "待确认", String(coreMetrics.waiting)],
+              ["calendar-check", "今日预约", String(coreMetrics.today)],
+              ["shopping-bag", "建议上新", String(coreMetrics.upStyle)],
             ]
               .map(([iconName, label, value]) => `<div class="metric">${icon(iconName)}<div><span>${label}</span><b>${value}</b></div></div>`)
               .join("")}
@@ -2224,7 +2256,7 @@ function renderMerchant() {
           </div>
           <hr class="divider" />
           <div class="btn-row">
-            <button class="btn primary" type="button" data-action="open-modal" data-modal="trendDetail">${icon("sparkles")}生成运营方案</button>
+            <button class="btn primary" type="button" data-action="generate-operation-plan">${icon("sparkles")}生成运营方案</button>
             <button class="btn secondary" type="button" data-action="open-modal" data-modal="launchStyle">${icon("upload")}一键上架</button>
             <button class="btn soft" type="button" data-action="open-modal" data-modal="pushConfirm">${icon("send")}推送目标用户</button>
           </div>
@@ -2679,55 +2711,42 @@ function modalShareBti() {
     .slice(0, 3)
     .join(" / ");
   const metrics = [
-    ["显白", metricValue("white_axis", 92), "手部柔光"],
-    ["修手", metricValue("shape_axis", 87), "比例在线"],
-    ["承载", metricValue("design_axis", 84), "细节可加"],
-    ["气质", metricValue("vibe_axis", 90), "风格稳定"],
+    ["显白指数", metricValue("white_axis", 92)],
+    ["修手指数", metricValue("shape_axis", 87)],
+    ["承载指数", metricValue("design_axis", 84)],
+    ["气质指数", metricValue("vibe_axis", 90)],
   ];
-  return modalFrame(
-    "分享你的 Nail BTI",
-    `
-      <div class="share-card bti-share-export-card">
-        <div class="share-hero">
-          <div>
-            <span class="pill">${escapeHtml(personaCode)} · ${escapeHtml(bti?.code || "WNLS")}</span>
-            <h3 class="bti-name">${escapeHtml(personaName)}</h3>
-            <p class="share-hook">AI 说我不是纠结，是下一次一定换风格体。</p>
-            <p class="muted">${escapeHtml(summary)}</p>
-          </div>
-          <div class="persona-img"><img src="${resolveImageSrc(bti?.avatarUrl, assets("persona.jpg"))}" alt="BTI 卡片预览" /></div>
-        </div>
+  return `
+    <section class="modal-card share-modal-card share-poster-modal">
+      <button class="btn icon-only close-x" type="button" data-action="close-modal" aria-label="关闭">${icon("x")}</button>
+      <div class="modal-body">
+      <div class="share-card bti-share-export-card bti-share-poster">
+        <div class="share-brand">甲遇 NailMuse</div>
+        <h2 class="share-poster-title">我的 Nail BTI</h2>
+        <span class="share-type-pill">${escapeHtml(personaCode)} · ${escapeHtml(bti?.code || "WNLS")}</span>
+        <h3 class="bti-name">${escapeHtml(personaName)}</h3>
+        <p class="share-hook">AI 说我不是纠结，<br />是下一次一定换风格体。</p>
+        <p class="muted">${escapeHtml(summary)}</p>
         <div class="share-roast">
-          ${icon("quote")}
-          <strong>${escapeHtml(roast)}</strong>
+          <strong>“ ${escapeHtml(roast)} ”</strong>
         </div>
         <div class="share-scores">
-          ${metrics
-            .map(([label, value, note]) => `<span>${label}<b>${value}</b><small>${escapeHtml(note)}</small></span>`)
-            .join("")}
+          ${metrics.map(([label, value]) => `<span><small>${escapeHtml(label)}</small><b>${value}</b></span>`).join("")}
         </div>
-        <div class="share-insight-grid">
-          <div>
-            <span>本命款</span>
-            <strong>${escapeHtml(mainStyle.name || "冰透猫眼轻法式")}</strong>
-            <p>${escapeHtml(mainStyle.reason || "显白耐看，镜头和日常都不容易翻车。")}</p>
-          </div>
-          <div>
-            <span>避雷区</span>
-            <strong>${escapeHtml(avoidText || "荧光色 / 厚重雕花")}</strong>
-            <p>${escapeHtml(recommendation.avoidReason || "容易压住手型，还会让精致感离家出走。")}</p>
-          </div>
+        <div class="share-poster-foot">
+          <strong>本命款：${escapeHtml(mainStyle.name || "冰透猫眼轻法式")}</strong>
+          <span>避雷：${escapeHtml(avoidText || "荧光色 / 厚重雕花")}</span>
+          <em>你测出来是什么？发我看看，顺便帮我决定下一款。</em>
         </div>
-        <div class="share-footer-line">你测出来是什么？发我看看，顺便帮我决定下一款。</div>
       </div>
-    `,
-    `
+      </div>
+      <div class="modal-footer">
       <button class="btn secondary" type="button" data-action="download-bti-card">${icon("download")}保存图片</button>
       <button class="btn secondary" type="button" data-action="toast" data-toast="分享链接已复制">${icon("copy")}复制链接</button>
       <button class="btn primary" type="button" data-action="toast" data-toast="已打开分享面板">${icon("share-2")}分享给好友</button>
-    `,
-    true,
-  );
+      </div>
+    </section>
+  `;
 }
 
 function modalImportTryon() {
@@ -3213,9 +3232,55 @@ function modalTrendDetail() {
     `
       <button class="btn secondary" type="button" data-action="close-modal">关闭</button>
       <a class="btn soft" href="${trend.url}" target="_blank" rel="noreferrer">${icon("external-link")}查看原帖</a>
-      <button class="btn primary" type="button" data-action="toast" data-toast="${trend.label}运营方案已生成">${icon("sparkles")}生成运营方案</button>
+      <button class="btn primary" type="button" data-action="generate-operation-plan" data-trend="${trend.id}">${icon("sparkles")}生成运营方案</button>
     `,
   );
+}
+
+function generateOperationPlanFile(trendId = "") {
+  if (trendId) state.selectedTrend = trendId;
+  const trend = activeTrend();
+  const batch = currentXhsTrendBatch();
+  const date = new Date().toISOString().slice(0, 10);
+  const safeLabel = String(trend.label || "趋势款").replace(/[\\/:*?"<>|]/g, "").slice(0, 24) || "趋势款";
+  const tags = Array.isArray(trend.tags) ? trend.tags.join(" / ") : "";
+  const content = `# 甲遇 NailMuse 运营方案：${trend.label}
+
+生成日期：${date}
+
+## 趋势判断
+
+- 趋势主题：${trend.merchantTitle}
+- 小红书信号：${trend.signal}
+- 标签：${tags}
+- 批次：${batch.recentDays} 天内热榜，采集时间 ${formatGeneratedDate(batch.generatedAt)}
+
+## 上新建议
+
+1. 48 小时内上架 1 个主推款和 1 个通勤改色版。
+2. 门店案例图统一使用「手部近景 + 细节特写 + 价格区间」三图结构。
+3. 标题关键词优先放：${tags || trend.label}。
+
+## 套餐设计
+
+- 引流款：¥99-139，短甲/基础显白版。
+- 主推款：¥168-238，增加细闪、蝴蝶结、贝母或局部猫眼。
+- 高客单款：¥268-368，延长甲、钻饰或复杂晕染。
+
+## 今日执行清单
+
+- 补 3 张案例图：自然光手照、细节微距、上手对比。
+- 在商家中心置顶该趋势款 7 天。
+- 对近期收藏/试戴用户推送一次限时预约券。
+
+## 文案模板
+
+${trend.action}
+
+主推文案：这款适合想要显白但不想太夸张的用户，上手清透、拍照有细节，通勤和约会都能撑住。
+`;
+  downloadTextFile(`甲遇运营方案-${safeLabel}-${date}.md`, "text/markdown;charset=utf-8", content);
+  showToast(`${trend.label}运营方案文件已生成`);
 }
 
 function modalTrendImage() {
@@ -3643,6 +3708,7 @@ async function generateRecommendedStyle() {
     if (result?.success !== true || !result.style) {
       throw new Error(result?.error || "AI生成新款式失败");
     }
+    state.generatedStyleNonce += 1;
     state.generatedStyle = generatedStyleFromPayload(result.style);
     state.selectedStyle = "generated";
     resetStoresState();
@@ -4104,6 +4170,9 @@ document.addEventListener("click", (event) => {
       break;
     case "generate-style":
       generateRecommendedStyle();
+      break;
+    case "generate-operation-plan":
+      generateOperationPlanFile(target.dataset.trend || "");
       break;
     case "generate-demand":
       generateDemand();

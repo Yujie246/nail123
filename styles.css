@@ -8134,3 +8134,1351 @@ select {
     flex-direction: column;
   }
 }
+
+/* 2026-06-08 UX fixes: one-screen share card, compact booking stores, actionable merchant plans */
+.share-modal-card {
+  width: min(1120px, calc(100vw - 32px));
+  max-height: calc(100svh - 32px);
+  margin: auto;
+  padding: clamp(18px, 2.2vh, 28px);
+  overflow: hidden;
+}
+
+.share-modal-card .modal-body {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 0;
+}
+
+.share-modal-card .modal-footer {
+  justify-content: center;
+  margin-top: clamp(10px, 1.5vh, 16px);
+  padding-top: clamp(10px, 1.5vh, 14px);
+}
+
+.share-modal-card .bti-share-export-card {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: clamp(18px, 2.2vw, 30px);
+}
+
+.share-modal-card .bti-share-export-card .share-hero {
+  grid-template-columns: minmax(0, 1fr) clamp(150px, 18vw, 230px);
+  gap: clamp(18px, 3vw, 42px);
+}
+
+.share-modal-card .bti-share-export-card .persona-img {
+  width: clamp(150px, 18vw, 230px);
+  height: clamp(150px, 18vw, 230px);
+}
+
+.share-modal-card .bti-share-export-card .bti-name {
+  font-size: clamp(42px, 5.2vw, 76px);
+}
+
+.share-modal-card .bti-share-export-card .share-hook {
+  max-width: 760px;
+  font-size: clamp(26px, 3.4vw, 50px);
+}
+
+.share-modal-card .bti-share-export-card .muted {
+  font-size: clamp(16px, 1.8vw, 24px);
+}
+
+.share-modal-card .bti-share-export-card .share-roast {
+  margin-top: clamp(14px, 2vh, 22px);
+}
+
+.share-modal-card .bti-share-export-card .share-footer-line {
+  margin-top: clamp(12px, 1.7vh, 18px);
+}
+
+.stores-direct-page {
+  gap: 10px;
+  overflow: visible;
+}
+
+.stores-direct-page .real-store-panel {
+  margin-bottom: 8px;
+  padding: 12px 16px;
+}
+
+.stores-direct-page .real-store-panel .panel-title {
+  margin-bottom: 6px;
+  font-size: clamp(24px, 2.2vw, 34px);
+}
+
+.stores-direct-page .real-store-panel .muted {
+  margin: 4px 0;
+  line-height: 1.45;
+}
+
+.stores-direct-page .store-style-hero {
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 14px;
+}
+
+.stores-direct-page .store-style-hero > img {
+  width: 92px;
+  height: 92px;
+}
+
+.stores-direct-page .real-results {
+  display: grid;
+  gap: 8px;
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
+}
+
+.stores-direct-page .store-card.real {
+  grid-template-columns: 120px minmax(0, 1fr) 220px;
+  align-items: center;
+  gap: 14px;
+  min-height: 116px;
+  padding: 12px 14px;
+}
+
+.stores-direct-page .store-card img,
+.stores-direct-page .store-photo-placeholder {
+  width: 120px;
+  height: 96px;
+}
+
+.stores-direct-page .store-card.real > div:nth-child(2) {
+  display: grid;
+  gap: 4px;
+}
+
+.stores-direct-page .store-card h3 {
+  margin: 0;
+  font-size: clamp(18px, 1.55vw, 24px);
+  line-height: 1.18;
+}
+
+.stores-direct-page .store-card .muted {
+  margin: 0;
+  overflow: hidden;
+  color: #856f76;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stores-direct-page .store-meta {
+  gap: 8px 12px;
+  font-size: 13px;
+}
+
+.stores-direct-page .store-detail-grid {
+  display: none;
+}
+
+.stores-direct-page .store-mini-line,
+.stores-direct-page .store-badge-row,
+.stores-direct-page .store-match-reason {
+  display: none;
+}
+
+.stores-direct-page .store-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  align-content: center;
+}
+
+.stores-direct-page .store-actions .btn {
+  min-height: 46px;
+  padding: 0 12px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.merchant-core-panel .metric b {
+  color: #be4f75;
+}
+
+@media (max-width: 1180px) {
+  .stores-direct-page .store-card.real {
+    grid-template-columns: 104px minmax(0, 1fr);
+  }
+
+  .stores-direct-page .store-actions {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .share-modal-card {
+    width: calc(100vw - 20px);
+    max-height: calc(100svh - 20px);
+  }
+
+  .share-modal-card .bti-share-export-card .share-hero,
+  .stores-direct-page .store-style-hero,
+  .stores-direct-page .store-card.real,
+  .stores-direct-page .store-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .share-modal-card .bti-share-export-card .persona-img,
+  .stores-direct-page .store-card img,
+  .stores-direct-page .store-photo-placeholder {
+    justify-self: center;
+  }
+
+  .stores-direct-page .store-card .muted {
+    white-space: normal;
+  }
+}
+
+/* 2026-06-08 hard fit for direct booking cards on the default browser viewport */
+.stores-direct-page {
+  gap: 8px !important;
+  overflow: visible !important;
+  padding-top: clamp(10px, 1.4vh, 18px) !important;
+  padding-bottom: clamp(10px, 1.4vh, 18px) !important;
+}
+
+.stores-direct-page .real-store-panel {
+  min-height: 0 !important;
+}
+
+.stores-direct-page .real-store-panel:not(:first-of-type) {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.stores-direct-page .real-store-panel:not(:first-of-type) .btn-row {
+  margin: 0;
+}
+
+.stores-direct-page .real-results {
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  max-height: none !important;
+  overflow: visible !important;
+  padding-right: 0 !important;
+}
+
+.stores-direct-page .store-card.real.booking-compact {
+  display: grid !important;
+  grid-template-columns: 108px minmax(0, 1fr) minmax(188px, 220px) !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 0 !important;
+  padding: 10px 12px !important;
+  overflow: visible !important;
+}
+
+.stores-direct-page .store-card.real.booking-compact > img,
+.stores-direct-page .store-card.real.booking-compact > .store-photo-placeholder {
+  width: 108px !important;
+  height: 82px !important;
+  min-height: 0 !important;
+  border-radius: 7px !important;
+}
+
+.stores-direct-page .store-card.real.booking-compact > div:nth-child(2) {
+  min-width: 0;
+  gap: 3px !important;
+}
+
+.stores-direct-page .store-card.real.booking-compact h3 {
+  display: -webkit-box;
+  margin: 0 !important;
+  overflow: hidden;
+  line-height: 1.18 !important;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.stores-direct-page .store-card.real.booking-compact .store-meta {
+  gap: 5px 10px !important;
+  overflow: hidden;
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+}
+
+.stores-direct-page .store-card.real.booking-compact .store-meta span {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.stores-direct-page .store-card.real.booking-compact .muted {
+  max-width: 100%;
+  margin: 0 !important;
+  overflow: hidden;
+  font-size: 13px !important;
+  line-height: 1.3 !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stores-direct-page .store-quick-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 1px 0 0;
+  overflow: hidden;
+  color: #a94868;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stores-direct-page .store-quick-note i {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+}
+
+.stores-direct-page .store-card.real.booking-compact .store-detail-grid,
+.stores-direct-page .store-card.real.booking-compact .store-mini-line,
+.stores-direct-page .store-card.real.booking-compact .store-badge-row,
+.stores-direct-page .store-card.real.booking-compact .store-match-reason,
+.stores-direct-page .store-card.real.booking-compact .tag-row {
+  display: none !important;
+}
+
+.stores-direct-page .store-card.real.booking-compact .store-actions {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  align-content: center !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+}
+
+.stores-direct-page .store-card.real.booking-compact .store-actions .btn {
+  min-height: 38px !important;
+  padding: 0 10px !important;
+  border-radius: 12px !important;
+  font-size: 13px !important;
+  line-height: 1.15 !important;
+  white-space: nowrap;
+}
+
+@media (max-width: 1120px) {
+  .stores-direct-page .store-card.real.booking-compact {
+    grid-template-columns: 96px minmax(0, 1fr) !important;
+  }
+
+  .stores-direct-page .store-card.real.booking-compact .store-actions {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .stores-direct-page .real-store-panel:not(:first-of-type),
+  .stores-direct-page .store-card.real.booking-compact,
+  .stores-direct-page .store-card.real.booking-compact .store-actions {
+    grid-template-columns: 1fr !important;
+  }
+
+  .stores-direct-page .store-card.real.booking-compact > img,
+  .stores-direct-page .store-card.real.booking-compact > .store-photo-placeholder {
+    width: 100% !important;
+    height: 140px !important;
+  }
+
+  .stores-direct-page .store-card.real.booking-compact .muted,
+  .stores-direct-page .store-quick-note {
+    white-space: normal;
+  }
+}
+
+/* 2026-06-08 share card ratio fit: show the full card image and keep the modal in one viewport */
+.share-modal-card {
+  display: grid !important;
+  grid-template-rows: minmax(0, 1fr) auto;
+  width: min(1040px, calc(100vw - 28px)) !important;
+  max-height: calc(100svh - 24px) !important;
+  padding: clamp(12px, 1.6vh, 20px) !important;
+}
+
+.share-modal-card .modal-body {
+  min-height: 0;
+  align-items: center;
+}
+
+.share-modal-card .modal-footer {
+  flex-shrink: 0;
+  margin-top: clamp(8px, 1.1vh, 12px) !important;
+  padding-top: clamp(8px, 1.1vh, 12px) !important;
+}
+
+.share-modal-card .bti-share-export-card {
+  display: grid;
+  gap: clamp(8px, 1.1vh, 12px);
+  max-height: calc(100svh - 142px);
+  padding: clamp(14px, 1.9vh, 22px) !important;
+}
+
+.share-modal-card .bti-share-export-card .share-hero {
+  grid-template-columns: minmax(0, 1fr) clamp(150px, 23vh, 210px) !important;
+  gap: clamp(18px, 3vw, 34px) !important;
+}
+
+.share-modal-card .bti-share-export-card .persona-img {
+  width: clamp(150px, 23vh, 210px) !important;
+  height: clamp(150px, 23vh, 210px) !important;
+  padding: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.share-modal-card .bti-share-export-card .persona-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  object-position: center;
+}
+
+.share-modal-card .bti-share-export-card .bti-name {
+  margin: 4px 0 8px;
+  font-size: clamp(34px, 4.4vw, 58px) !important;
+  line-height: 1.02 !important;
+}
+
+.share-modal-card .bti-share-export-card .share-hook {
+  max-width: 700px;
+  margin-bottom: 8px;
+  font-size: clamp(22px, 3.1vw, 36px) !important;
+  line-height: 1.18 !important;
+}
+
+.share-modal-card .bti-share-export-card .muted {
+  font-size: clamp(15px, 1.55vw, 20px) !important;
+  line-height: 1.42;
+}
+
+.share-modal-card .bti-share-export-card .share-roast {
+  margin-top: clamp(8px, 1.1vh, 12px) !important;
+  padding: clamp(10px, 1.35vh, 14px) clamp(12px, 1.8vh, 16px) !important;
+}
+
+.share-modal-card .bti-share-export-card .share-roast strong {
+  font-size: clamp(15px, 1.5vw, 18px);
+  line-height: 1.35;
+}
+
+.share-modal-card .bti-share-export-card .share-footer-line {
+  margin-top: 0 !important;
+  padding: clamp(8px, 1.1vh, 11px) 14px !important;
+  font-size: clamp(13px, 1.4vw, 16px);
+}
+
+.stores-direct-page .store-card.real.booking-compact .store-actions {
+  justify-self: stretch;
+}
+
+.stores-direct-page .store-card.real.booking-compact .store-actions .btn {
+  min-height: 44px !important;
+}
+
+@media (max-height: 780px) {
+  .share-modal-card .bti-share-export-card {
+    max-height: calc(100svh - 124px);
+    padding: 12px 16px !important;
+  }
+
+  .share-modal-card .bti-share-export-card .share-hero {
+    grid-template-columns: minmax(0, 1fr) clamp(130px, 21vh, 170px) !important;
+  }
+
+  .share-modal-card .bti-share-export-card .persona-img {
+    width: clamp(130px, 21vh, 170px) !important;
+    height: clamp(130px, 21vh, 170px) !important;
+  }
+
+  .share-modal-card .bti-share-export-card .bti-name {
+    font-size: clamp(30px, 4vw, 48px) !important;
+  }
+
+  .share-modal-card .bti-share-export-card .share-hook {
+    font-size: clamp(20px, 2.8vw, 30px) !important;
+  }
+}
+
+/* 2026-06-08 final BTI poster: match the vertical share card and keep preset hand photos complete */
+.share-modal-card.share-poster-modal {
+  width: min(720px, calc(100vw - 28px)) !important;
+  max-height: calc(100svh - 22px) !important;
+  overflow: visible !important;
+  padding: clamp(10px, 1.4vh, 16px) !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.share-modal-card.share-poster-modal .close-x {
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+}
+
+.share-modal-card.share-poster-modal .modal-body {
+  display: grid !important;
+  place-items: center !important;
+  min-height: 0;
+  overflow: visible !important;
+}
+
+.share-modal-card.share-poster-modal .modal-footer {
+  margin-top: clamp(8px, 1.3vh, 14px) !important;
+  padding-top: 0 !important;
+  border: 0 !important;
+}
+
+.share-modal-card.share-poster-modal .modal-footer .btn {
+  min-height: 46px;
+  padding-inline: clamp(18px, 3vw, 28px);
+}
+
+.share-modal-card.share-poster-modal .bti-share-export-card.bti-share-poster {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: min(590px, calc(100vw - 54px), calc((100svh - 104px) * 0.76)) !important;
+  max-width: none !important;
+  max-height: none !important;
+  aspect-ratio: 0.76 / 1;
+  margin: 0 auto !important;
+  padding: clamp(20px, 3.3vh, 34px) !important;
+  overflow: hidden;
+  border: 1px solid rgba(223, 143, 163, 0.38);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 88% 14%, rgba(255, 255, 255, 0.6), transparent 30%),
+    radial-gradient(circle at 8% 90%, rgba(255, 255, 255, 0.42), transparent 28%),
+    repeating-linear-gradient(104deg, rgba(205, 130, 150, 0.17) 0 1px, transparent 1px 42px),
+    linear-gradient(145deg, rgba(255, 252, 254, 0.92), rgba(255, 228, 238, 0.72));
+  box-shadow: 0 26px 80px rgba(160, 75, 103, 0.2);
+}
+
+.share-poster-modal .share-brand {
+  color: #8f6172;
+  font-size: clamp(14px, 1.8vh, 20px);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.share-poster-modal .share-poster-title {
+  margin: clamp(8px, 1.35vh, 12px) 0 clamp(12px, 1.8vh, 18px);
+  color: #8a2f52;
+  font-family: Georgia, "Songti SC", serif;
+  font-size: clamp(34px, 6vh, 54px);
+  line-height: 1.02;
+}
+
+.share-poster-modal .share-type-pill {
+  align-self: flex-start;
+  padding: 8px 16px;
+  border: 1px solid rgba(221, 128, 156, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 245, 249, 0.82);
+  color: #9b4f69;
+  font-size: clamp(13px, 1.75vh, 18px);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.share-poster-modal .bti-share-poster .bti-name {
+  margin: clamp(13px, 2.2vh, 22px) 0 clamp(8px, 1.3vh, 12px) !important;
+  color: #8a2f52;
+  font-family: Georgia, "Songti SC", serif;
+  font-size: clamp(42px, 8vh, 76px) !important;
+  line-height: 1.02 !important;
+}
+
+.share-poster-modal .bti-share-poster .share-hook {
+  max-width: none;
+  margin: 0 0 clamp(14px, 2.2vh, 22px);
+  color: #3f2732;
+  font-size: clamp(22px, 3.7vh, 34px) !important;
+  font-weight: 900;
+  line-height: 1.28 !important;
+}
+
+.share-poster-modal .bti-share-poster .muted {
+  margin: 0;
+  color: rgba(95, 70, 80, 0.7);
+  font-size: clamp(14px, 2vh, 20px) !important;
+  font-weight: 780;
+  line-height: 1.45;
+}
+
+.share-poster-modal .bti-share-poster .share-roast {
+  margin: clamp(16px, 2.6vh, 26px) 0 clamp(16px, 2.4vh, 24px) !important;
+  padding: clamp(13px, 2vh, 18px) clamp(14px, 2.3vh, 22px) !important;
+  border-radius: 12px;
+  background: rgba(255, 238, 245, 0.82);
+  color: #a54c6a;
+}
+
+.share-poster-modal .bti-share-poster .share-roast strong {
+  font-size: clamp(15px, 2.1vh, 21px);
+  line-height: 1.35;
+}
+
+.share-poster-modal .bti-share-poster .share-scores {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(9px, 1.6vh, 14px);
+  margin: 0;
+}
+
+.share-poster-modal .bti-share-poster .share-scores span {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: clamp(10px, 1.8vh, 16px) 8px;
+  border: 1px solid rgba(221, 128, 156, 0.24);
+  border-radius: 12px;
+  background: rgba(255, 250, 252, 0.78);
+  text-align: left;
+}
+
+.share-poster-modal .bti-share-poster .share-scores small {
+  color: #8c5b73;
+  font-size: clamp(11px, 1.55vh, 15px);
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.share-poster-modal .bti-share-poster .share-scores b {
+  color: #dc5f8d;
+  font-size: clamp(24px, 4.2vh, 38px);
+  font-weight: 950;
+  line-height: 1;
+}
+
+.share-poster-modal .share-poster-foot {
+  display: grid;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: clamp(14px, 2.2vh, 22px);
+}
+
+.share-poster-modal .share-poster-foot strong {
+  color: #8c5b73;
+  font-size: clamp(14px, 2vh, 19px);
+  font-weight: 950;
+}
+
+.share-poster-modal .share-poster-foot span,
+.share-poster-modal .share-poster-foot em {
+  color: rgba(95, 70, 80, 0.66);
+  font-size: clamp(12px, 1.75vh, 16px);
+  font-style: normal;
+  font-weight: 760;
+  line-height: 1.35;
+}
+
+.sample-hand-card img {
+  aspect-ratio: 1 / 1 !important;
+  object-fit: contain !important;
+  object-position: center;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+@media (max-width: 760px) {
+  .share-modal-card.share-poster-modal .modal-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .share-modal-card.share-poster-modal .modal-footer .btn {
+    width: 100%;
+  }
+
+  .share-poster-modal .bti-share-poster .share-scores {
+    gap: 8px;
+  }
+}
+
+/* 2026-06-08 global crystal polish: denser pink-glass surfaces and safer BTI poster fit */
+body {
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.58) 0 1px, transparent 1px 78px),
+    linear-gradient(180deg, rgba(255, 252, 253, 0.95), rgba(255, 238, 246, 0.78) 54%, rgba(255, 221, 236, 0.66)),
+    #fff7f9;
+}
+
+#app {
+  position: relative;
+  isolation: isolate;
+}
+
+#app::before {
+  position: fixed;
+  left: -130px;
+  bottom: -190px;
+  z-index: -1;
+  width: min(34vw, 460px);
+  height: min(34vw, 460px);
+  pointer-events: none;
+  background:
+    linear-gradient(45deg, rgba(255, 255, 255, 0.84), rgba(255, 190, 214, 0.1) 34%, rgba(170, 74, 108, 0.12) 72%, rgba(255, 255, 255, 0.42)),
+    linear-gradient(135deg, transparent 22%, rgba(255, 255, 255, 0.52) 23% 26%, transparent 27% 61%, rgba(231, 105, 144, 0.16) 62% 64%, transparent 65%),
+    conic-gradient(from 20deg, rgba(255, 255, 255, 0.58), rgba(235, 116, 154, 0.16), rgba(255, 255, 255, 0.45), rgba(155, 77, 108, 0.16), rgba(255, 255, 255, 0.58));
+  clip-path: polygon(50% 0, 86% 16%, 100% 52%, 72% 94%, 28% 100%, 0 54%, 15% 18%);
+  opacity: 0.28;
+}
+
+.page {
+  position: relative;
+}
+
+.page::before {
+  background:
+    linear-gradient(112deg, rgba(151, 68, 96, 0.05) 0 1px, transparent 1px 76px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent 38%),
+    radial-gradient(rgba(145, 64, 93, 0.045) 0.8px, transparent 1px);
+  background-size: auto, auto, 18px 18px;
+}
+
+.topbar {
+  border-bottom-color: rgba(216, 126, 154, 0.22);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.92), rgba(255, 242, 248, 0.84) 50%, rgba(255, 255, 255, 0.9)),
+    rgba(255, 250, 252, 0.88);
+  box-shadow: 0 10px 30px rgba(167, 80, 109, 0.08);
+}
+
+.panel,
+.tool-panel,
+.modal-card:not(.share-poster-modal),
+.store-card,
+.style-tile,
+.metric,
+.quote-card,
+.trend-item,
+.real-store-panel,
+.demand-start,
+.store-context,
+.store-style-hero,
+.store-detail,
+.preview-box,
+.preview-text,
+.summary-box,
+.empty-state,
+.source-option,
+.booking-option,
+.modal-stat,
+.mine-record-card,
+.mine-detail-head,
+.appointment-detail-grid > span,
+.merchant-site-panel,
+.merchant-outside-panel,
+.merchant-core-panel,
+.merchant-demand-panel,
+.merchant-agent-panel,
+.sample-hand-card {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(220, 126, 158, 0.28) !important;
+  background:
+    linear-gradient(112deg, rgba(157, 68, 98, 0.045) 0 1px, transparent 1px 70px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 245, 249, 0.36) 42%, rgba(255, 229, 239, 0.5)),
+    rgba(255, 250, 252, 0.76) !important;
+  box-shadow:
+    0 22px 52px rgba(154, 70, 100, 0.13),
+    0 6px 18px rgba(255, 197, 219, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    inset 0 -1px 0 rgba(169, 72, 105, 0.08) !important;
+}
+
+.panel::after,
+.tool-panel::after,
+.store-card::after,
+.style-tile::after,
+.quote-card::after,
+.trend-item::after,
+.real-store-panel::after,
+.demand-start::after,
+.store-detail::after,
+.source-option::after,
+.booking-option::after,
+.sample-hand-card::after {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  z-index: 1;
+  width: 7px;
+  height: 7px;
+  pointer-events: none;
+  border: 1px solid rgba(235, 111, 151, 0.28);
+  border-left: 0;
+  border-bottom: 0;
+  opacity: 0.58;
+  transform: rotate(45deg);
+  box-shadow:
+    18px 16px 0 -3px rgba(255, 255, 255, 0.9),
+    28px -8px 0 -4px rgba(224, 98, 139, 0.28);
+  content: "";
+}
+
+.panel-title i,
+.page-title i,
+.modal-title i,
+.benefit-item i,
+.advice-item i,
+.metric i,
+.store-meta i,
+.share-roast i {
+  border-radius: 999px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(255, 218, 231, 0.62));
+  box-shadow:
+    0 8px 18px rgba(218, 91, 132, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.btn:not(.hero-cta) {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(222, 128, 158, 0.32);
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.7), rgba(255, 241, 247, 0.78) 46%, rgba(255, 224, 237, 0.7)),
+    rgba(255, 249, 252, 0.86);
+  box-shadow:
+    0 12px 26px rgba(167, 78, 109, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(171, 76, 107, 0.08);
+}
+
+.btn:not(.hero-cta)::before {
+  position: absolute;
+  inset: 1px;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(115deg, transparent 0 28%, rgba(255, 255, 255, 0.64) 36%, transparent 48% 100%);
+  opacity: 0.5;
+  content: "";
+}
+
+.btn:not(.hero-cta)::after {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 7px;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.72), transparent);
+  opacity: 0.72;
+  content: "";
+}
+
+.btn:not(.hero-cta) i {
+  position: relative;
+  z-index: 1;
+}
+
+.btn.primary:not(.hero-cta) {
+  border-color: rgba(255, 255, 255, 0.76) !important;
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.52), rgba(255, 241, 247, 0.16) 42%, rgba(119, 45, 76, 0.08)),
+    linear-gradient(135deg, #f8aac5 0%, #ec719c 52%, #d94f80 100%) !important;
+  box-shadow:
+    0 20px 38px rgba(198, 76, 116, 0.24),
+    0 8px 20px rgba(255, 200, 222, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.74),
+    inset 0 -10px 20px rgba(120, 48, 73, 0.11) !important;
+}
+
+.btn.secondary:not(.hero-cta),
+.btn.soft:not(.hero-cta) {
+  color: #8f3d5a;
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.86), rgba(255, 242, 247, 0.74) 48%, rgba(255, 226, 238, 0.64)),
+    rgba(255, 250, 252, 0.86) !important;
+}
+
+.btn:not(.hero-cta):hover {
+  border-color: rgba(225, 91, 135, 0.42);
+  box-shadow:
+    0 18px 38px rgba(167, 78, 109, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+}
+
+.stepper {
+  padding: 6px;
+  border: 1px solid rgba(224, 128, 158, 0.18);
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.74), rgba(255, 235, 243, 0.52)),
+    rgba(255, 250, 252, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.step {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.step.active {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.44), rgba(255, 235, 243, 0.14)),
+    linear-gradient(135deg, #f8a9c1, #e15a88);
+  box-shadow: 0 10px 22px rgba(216, 82, 124, 0.2);
+}
+
+.dropzone {
+  border-color: rgba(220, 86, 111, 0.34) !important;
+  background:
+    linear-gradient(112deg, rgba(157, 68, 98, 0.04) 0 1px, transparent 1px 72px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.66), rgba(255, 235, 243, 0.5)),
+    rgba(255, 249, 252, 0.72) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 20px 42px rgba(170, 79, 109, 0.1);
+}
+
+.dropzone i,
+.dropzone svg {
+  filter: drop-shadow(0 10px 18px rgba(221, 83, 126, 0.16));
+}
+
+.benefit-item,
+.advice-item,
+.store-detail-grid span,
+.modal-stat,
+.metric,
+.appointment-detail-grid > span,
+.merchant-core-panel .metric {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 238, 245, 0.68) 56%, rgba(255, 246, 249, 0.74)),
+    rgba(255, 250, 252, 0.82) !important;
+}
+
+.tag,
+.store-badge,
+.pill,
+.chip {
+  border-color: rgba(222, 128, 158, 0.3);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.66), rgba(255, 231, 240, 0.68)),
+    rgba(255, 244, 249, 0.78);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+}
+
+.sample-hand-card img,
+.style-tile img,
+.store-card img,
+.uploaded-hand-preview,
+.persona-img img {
+  border: 1px solid rgba(226, 146, 170, 0.24);
+  box-shadow:
+    0 14px 30px rgba(150, 70, 99, 0.11),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.share-modal-card.share-poster-modal {
+  width: min(680px, calc(100vw - 30px)) !important;
+  max-height: calc(100svh - 18px) !important;
+  padding: clamp(6px, 1vh, 12px) !important;
+}
+
+.share-modal-card.share-poster-modal .modal-footer {
+  gap: 10px;
+  margin-top: clamp(6px, 1vh, 10px) !important;
+}
+
+.share-modal-card.share-poster-modal .modal-footer .btn {
+  min-height: 42px;
+  padding-inline: clamp(14px, 2.4vw, 22px);
+}
+
+.share-modal-card.share-poster-modal .bti-share-export-card.bti-share-poster {
+  width: min(540px, calc(100vw - 58px), calc((100svh - 158px) * 0.72)) !important;
+  aspect-ratio: 0.72 / 1;
+  padding: clamp(17px, 2.55vh, 28px) !important;
+  border-color: rgba(223, 143, 163, 0.44);
+  background:
+    linear-gradient(112deg, rgba(157, 68, 98, 0.08) 0 1px, transparent 1px 54px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 243, 248, 0.52) 48%, rgba(255, 224, 237, 0.62)),
+    rgba(255, 250, 252, 0.9) !important;
+}
+
+.share-poster-modal .share-poster-title {
+  font-size: clamp(31px, 5.2vh, 48px);
+}
+
+.share-poster-modal .bti-share-poster .bti-name {
+  font-size: clamp(36px, 6.6vh, 62px) !important;
+}
+
+.share-poster-modal .bti-share-poster .share-hook {
+  font-size: clamp(20px, 3.25vh, 30px) !important;
+}
+
+.share-poster-modal .bti-share-poster .muted {
+  font-size: clamp(13px, 1.75vh, 18px) !important;
+}
+
+.share-poster-modal .bti-share-poster .share-roast {
+  margin: clamp(12px, 1.9vh, 18px) 0 clamp(12px, 1.8vh, 18px) !important;
+}
+
+.share-poster-modal .bti-share-poster .share-scores b {
+  font-size: clamp(22px, 3.4vh, 32px);
+}
+
+@media (max-height: 820px) {
+  .share-modal-card.share-poster-modal .bti-share-export-card.bti-share-poster {
+    width: min(500px, calc(100vw - 58px), calc((100svh - 142px) * 0.7)) !important;
+    padding: clamp(14px, 2vh, 22px) !important;
+  }
+
+  .share-poster-modal .share-brand {
+    font-size: clamp(12px, 1.55vh, 16px);
+  }
+
+  .share-poster-modal .share-poster-title {
+    margin-bottom: clamp(8px, 1.2vh, 12px);
+    font-size: clamp(28px, 4.6vh, 40px);
+  }
+
+  .share-poster-modal .bti-share-poster .bti-name {
+    margin-top: clamp(9px, 1.5vh, 14px) !important;
+    font-size: clamp(32px, 5.7vh, 48px) !important;
+  }
+
+  .share-poster-modal .bti-share-poster .share-hook {
+    margin-bottom: clamp(9px, 1.5vh, 14px);
+    font-size: clamp(18px, 2.85vh, 24px) !important;
+  }
+
+  .share-poster-modal .bti-share-poster .share-roast {
+    padding: 10px 12px !important;
+  }
+
+  .share-poster-modal .share-poster-foot {
+    gap: 5px;
+    padding-top: 10px;
+  }
+}
+
+/* 2026-06-08 luxe info cards: richer result rows, advice chips, demand source cards, and empty states */
+.analysis-guide-panel {
+  overflow: hidden;
+}
+
+.analysis-guide-panel .benefit-list {
+  counter-reset: benefit;
+  gap: clamp(12px, 1.6vh, 16px);
+}
+
+.analysis-page .benefit-item,
+.analysis-page .advice-item,
+.benefit-item,
+.advice-item {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(219, 122, 154, 0.26) !important;
+  background:
+    linear-gradient(113deg, rgba(159, 70, 100, 0.06) 0 1px, transparent 1px 58px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 240, 246, 0.58) 48%, rgba(255, 229, 239, 0.52)),
+    rgba(255, 249, 252, 0.84) !important;
+  box-shadow:
+    0 18px 36px rgba(151, 68, 98, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    inset 0 -1px 0 rgba(171, 76, 107, 0.08) !important;
+  color: #4a2c38;
+}
+
+.analysis-page .benefit-item {
+  min-height: 62px;
+  padding: 12px 18px 12px 14px;
+  gap: 12px;
+}
+
+.analysis-page .benefit-item::before {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  border: 1px solid rgba(235, 121, 157, 0.28);
+  border-radius: 999px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 207, 224, 0.68)),
+    rgba(255, 239, 246, 0.8);
+  box-shadow:
+    0 8px 18px rgba(203, 75, 115, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+  color: #d75a86;
+  content: counter(benefit);
+  counter-increment: benefit;
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.analysis-page .benefit-item::after,
+.analysis-page .advice-item::after,
+.source-option::after,
+.demand-start .summary-box::after,
+.empty-state.compact::after {
+  position: absolute;
+  top: 0;
+  right: -24%;
+  bottom: 0;
+  z-index: -1;
+  width: 46%;
+  pointer-events: none;
+  background:
+    linear-gradient(96deg, transparent, rgba(255, 255, 255, 0.42), transparent 68%),
+    linear-gradient(180deg, rgba(255, 212, 228, 0.1), rgba(255, 255, 255, 0.18), rgba(214, 93, 132, 0.08));
+  transform: skewX(-16deg);
+  content: "";
+}
+
+.analysis-page .benefit-item i,
+.analysis-page .advice-item i,
+.benefit-item i,
+.advice-item i {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  padding: 9px;
+  border: 1px solid rgba(229, 121, 155, 0.24);
+  border-radius: 14px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 211, 227, 0.64) 62%, rgba(255, 239, 246, 0.82)),
+    rgba(255, 245, 249, 0.86);
+  box-shadow:
+    0 10px 20px rgba(199, 76, 116, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  color: #9b405c;
+}
+
+.analysis-page .benefit-item span,
+.analysis-page .advice-item span {
+  min-width: 0;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.analysis-page .advice-grid {
+  gap: clamp(12px, 1.8vh, 16px);
+}
+
+.analysis-page .advice-item {
+  min-height: 62px;
+  padding: 12px 16px;
+  border-radius: 18px;
+}
+
+.analysis-page .advice-item i {
+  border-radius: 50%;
+}
+
+.analysis-page .advice-item:hover,
+.analysis-page .benefit-item:hover,
+.source-option:hover,
+.demand-start .summary-box:hover {
+  transform: translateY(-1px);
+  border-color: rgba(224, 92, 136, 0.38) !important;
+  box-shadow:
+    0 22px 42px rgba(151, 68, 98, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+}
+
+.source-grid {
+  gap: clamp(12px, 1.8vw, 18px);
+}
+
+.source-option {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(220, 122, 154, 0.26) !important;
+  border-radius: 18px !important;
+  background:
+    linear-gradient(116deg, rgba(159, 70, 100, 0.065) 0 1px, transparent 1px 62px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 241, 247, 0.55) 48%, rgba(255, 230, 240, 0.56)),
+    rgba(255, 250, 252, 0.82) !important;
+  box-shadow:
+    0 20px 42px rgba(151, 68, 98, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    inset 0 -1px 0 rgba(171, 76, 107, 0.08) !important;
+}
+
+.source-option::before {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: -1;
+  width: 32px;
+  height: 32px;
+  border-top: 1px solid rgba(225, 92, 136, 0.2);
+  border-right: 1px solid rgba(225, 92, 136, 0.2);
+  border-radius: 0 12px 0 0;
+  content: "";
+}
+
+.demand-source-large .source-option {
+  min-height: 184px;
+  padding: 24px 20px;
+  align-content: center;
+  gap: 10px;
+}
+
+.source-option i,
+.demand-source-large .source-option i {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 2px;
+  padding: 11px;
+  border: 1px solid rgba(232, 121, 156, 0.24);
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(255, 207, 224, 0.68)),
+    rgba(255, 244, 249, 0.84);
+  box-shadow:
+    0 12px 24px rgba(198, 76, 116, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  color: #9a405b;
+}
+
+.source-option span {
+  color: #4a2c38;
+  font-size: clamp(17px, 1.5vw, 21px);
+  font-weight: 950;
+}
+
+.source-option small {
+  max-width: 240px;
+  color: rgba(92, 67, 78, 0.66);
+  font-size: clamp(12px, 1vw, 14px);
+  font-weight: 820;
+  line-height: 1.55;
+}
+
+.source-option.active {
+  border-color: rgba(224, 92, 136, 0.5) !important;
+  background:
+    linear-gradient(116deg, rgba(159, 70, 100, 0.07) 0 1px, transparent 1px 62px),
+    linear-gradient(180deg, rgba(255, 250, 252, 0.84), rgba(255, 225, 236, 0.7)),
+    rgba(255, 239, 246, 0.86) !important;
+}
+
+.demand-start {
+  border-radius: 22px;
+}
+
+.demand-start-head {
+  padding: 4px 2px 0;
+}
+
+.demand-start .summary-box,
+.empty-state.compact,
+.bti-empty-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(220, 122, 154, 0.26) !important;
+  border-radius: 18px;
+  background:
+    linear-gradient(112deg, rgba(159, 70, 100, 0.055) 0 1px, transparent 1px 62px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 238, 245, 0.56)),
+    rgba(255, 249, 252, 0.82) !important;
+  box-shadow:
+    0 18px 42px rgba(151, 68, 98, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+.demand-start .summary-box > i,
+.empty-state.compact > i,
+.bti-empty-card > i {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  padding: 12px;
+  border: 1px solid rgba(232, 121, 156, 0.24);
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(255, 207, 224, 0.68)),
+    rgba(255, 244, 249, 0.84);
+  color: #9a405b;
+  box-shadow:
+    0 12px 24px rgba(198, 76, 116, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.dropzone {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-radius: 22px;
+  background:
+    linear-gradient(115deg, rgba(158, 70, 100, 0.055) 0 1px, transparent 1px 66px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 239, 246, 0.62)),
+    rgba(255, 249, 252, 0.84) !important;
+}
+
+.dropzone::before {
+  position: absolute;
+  inset: 14px;
+  z-index: -1;
+  border: 1px dashed rgba(221, 97, 137, 0.34);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.32), transparent 60%),
+    rgba(255, 245, 249, 0.2);
+  content: "";
+}
+
+.dropzone::after {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  z-index: -1;
+  width: 52px;
+  height: 52px;
+  border-top: 1px solid rgba(225, 92, 136, 0.22);
+  border-right: 1px solid rgba(225, 92, 136, 0.22);
+  border-radius: 0 18px 0 0;
+  content: "";
+}
+
+.dropzone i,
+.dropzone svg {
+  width: 76px;
+  height: 76px;
+  padding: 16px;
+  border: 1px solid rgba(232, 121, 156, 0.22);
+  border-radius: 24px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 205, 223, 0.72)),
+    rgba(255, 239, 246, 0.88);
+}
+
+@media (max-width: 760px) {
+  .analysis-page .advice-grid,
+  .source-grid,
+  .demand-source-large {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-page .benefit-item::before {
+    width: 30px;
+    height: 30px;
+    flex-basis: 30px;
+  }
+}
