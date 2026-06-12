@@ -935,6 +935,94 @@ function fileToDataUrl(file) {
   });
 }
 
+function loadImageElement(src) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error("图片解析失败"));
+    image.src = src;
+  });
+}
+
+function dataUrlByteLength(dataUrl) {
+  const payload = String(dataUrl || "").split(",", 2)[1] || "";
+  return Math.ceil((payload.length * 3) / 4);
+}
+
+async function compressImageDataUrl(dataUrl, options = {}) {
+  if (!String(dataUrl || "").startsWith("data:image/")) return dataUrl;
+  const maxBytes = options.maxBytes || 1200 * 1024;
+  const passes = [
+    { maxSide: options.maxSide || 1280, quality: options.quality || 0.86 },
+    { maxSide: 1080, quality: 0.82 },
+    { maxSide: 920, quality: 0.78 },
+    { maxSide: 760, quality: 0.72 },
+    { maxSide: 640, quality: 0.68 },
+  ];
+  try {
+    const image = await loadImageElement(dataUrl);
+    const sourceWidth = image.naturalWidth || image.width;
+    const sourceHeight = image.naturalHeight || image.height;
+    if (!sourceWidth || !sourceHeight) return dataUrl;
+    const sourceBytes = dataUrlByteLength(dataUrl);
+    const sourceMime = dataUrl.slice(5, dataUrl.indexOf(";")).toLowerCase();
+    if (Math.max(sourceWidth, sourceHeight) <= passes[0].maxSide && sourceBytes <= maxBytes && sourceMime === "image/jpeg") {
+      return dataUrl;
+    }
+
+    let best = dataUrl;
+    let bestBytes = sourceBytes;
+    for (const pass of passes) {
+      const scale = Math.min(1, pass.maxSide / Math.max(sourceWidth, sourceHeight));
+      const width = Math.max(1, Math.round(sourceWidth * scale));
+      const height = Math.max(1, Math.round(sourceHeight * scale));
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const context = canvas.getContext("2d");
+      if (!context) continue;
+      context.fillStyle = "#fff";
+      context.fillRect(0, 0, width, height);
+      context.drawImage(image, 0, 0, width, height);
+      const output = canvas.toDataURL("image/jpeg", pass.quality);
+      const outputBytes = dataUrlByteLength(output);
+      if (outputBytes < bestBytes) {
+        best = output;
+        bestBytes = outputBytes;
+      }
+      if (outputBytes <= maxBytes) return output;
+    }
+    return best;
+  } catch (error) {
+    return dataUrl;
+  }
+}
+
+function dataUrlToFile(dataUrl, filename = "hand-upload.jpg") {
+  const [header, payload = ""] = String(dataUrl || "").split(",", 2);
+  const mime = header.split(";", 1)[0].replace("data:", "") || "image/jpeg";
+  const binary = atob(payload);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+  return new File([bytes], filename, { type: mime });
+}
+
+function asJpegFilename(filename = "hand-upload.jpg") {
+  const trimmed = String(filename || "hand-upload").trim() || "hand-upload";
+  return /\.[^.]+$/.test(trimmed) ? trimmed.replace(/\.[^.]+$/, ".jpg") : `${trimmed}.jpg`;
+}
+
+async function prepareHandImageFile(file, filename = "hand-upload.jpg") {
+  const originalDataUrl = await fileToDataUrl(file);
+  const dataUrl = await compressImageDataUrl(originalDataUrl);
+  if (dataUrl === originalDataUrl) {
+    return { file, dataUrl };
+  }
+  return { file: dataUrlToFile(dataUrl, asJpegFilename(filename)), dataUrl };
+}
+
 async function imageToDataUrl(src) {
   if (src.startsWith("data:image/")) return src;
   const response = await fetch(src);
@@ -953,9 +1041,10 @@ async function useReferenceHand(sampleId) {
     const blob = await response.blob();
     const extension = sample.img.split(".").pop() || "jpg";
     const file = new File([blob], `${sample.id}.${extension}`, { type: blob.type || "image/jpeg" });
-    state.handFile = file;
+    const prepared = await prepareHandImageFile(file, `${sample.id}.${extension}`);
+    state.handFile = prepared.file;
     state.handFileName = sample.name;
-    state.handImage = await fileToDataUrl(file);
+    state.handImage = prepared.dataUrl;
     state.handAnalysis = null;
     state.btiResult = null;
     state.tryonImage = "";
@@ -974,7 +1063,10 @@ async function apiJson(path, options = {}) {
   const response = await fetch(`${API_BASE}${path}`, options);
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) {
-    const detail = payload.detail || payload.error || response.statusText;
+    let detail = payload.detail || payload.error || "";
+    if (!detail && response.status === 413) detail = "图片太大，已自动压缩后请再试一次";
+    if (!detail && response.status === 504) detail = "AI生成超时，请稍后重试";
+    if (!detail) detail = response.statusText;
     throw new Error(detail || "接口调用失败");
   }
   return payload;
@@ -3581,9 +3673,10 @@ function selectHandFile() {
     const file = input.files?.[0];
     if (!file) return;
     try {
-      state.handFile = file;
+      const prepared = await prepareHandImageFile(file, file.name || "hand-upload.jpg");
+      state.handFile = prepared.file;
       state.handFileName = file.name;
-      state.handImage = await fileToDataUrl(file);
+      state.handImage = prepared.dataUrl;
       state.showHandSamples = false;
       state.handAnalysis = null;
       state.btiResult = null;
@@ -3602,7 +3695,7 @@ function selectHandFile() {
 }
 
 async function startAnalysis() {
-  if (!state.handFile) {
+  if (!state.handFile && !state.handImage) {
     selectHandFile();
     return;
   }
@@ -3612,8 +3705,24 @@ async function startAnalysis() {
   render();
   window.clearTimeout(analysisTimer);
   try {
+    let analysisFile = state.handFile;
+    if (state.handImage) {
+      const compressedHandImage = await compressImageDataUrl(state.handImage);
+      if (compressedHandImage !== state.handImage || !analysisFile) {
+        analysisFile = dataUrlToFile(compressedHandImage, asJpegFilename(state.handFileName || "hand-upload.jpg"));
+        state.handFile = analysisFile;
+        state.handImage = compressedHandImage;
+      }
+    } else if (analysisFile) {
+      const prepared = await prepareHandImageFile(analysisFile, state.handFileName || analysisFile.name || "hand-upload.jpg");
+      analysisFile = prepared.file;
+      state.handFile = prepared.file;
+      state.handImage = prepared.dataUrl;
+    }
+    if (!analysisFile) throw new Error("请先上传手部照片");
+
     const formData = new FormData();
-    formData.append("image", state.handFile);
+    formData.append("image", analysisFile, analysisFile.name || "hand-upload.jpg");
     const analysis = await apiJson("/api/analyze-hand", {
       method: "POST",
       body: formData,
@@ -3646,12 +3755,13 @@ async function runTryon() {
   render();
   try {
     const style = activeStyle();
-    const styleImage = await imageToDataUrl(getCurrentStyleImage());
+    const handImage = await compressImageDataUrl(state.handImage);
+    const styleImage = await compressImageDataUrl(await imageToDataUrl(getCurrentStyleImage()));
     const result = await apiJson("/api/generate-nail-tryon-v2", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        hand_image: state.handImage,
+        hand_image: handImage,
         style_image: styleImage,
         style_id: style.id,
         style_name: style.name,
@@ -3696,13 +3806,14 @@ async function generateRecommendedStyle() {
   render();
   try {
     const baseStyle = activeStyle();
+    const handImage = state.handImage ? await compressImageDataUrl(state.handImage) : "";
     const result = await apiJson("/api/generate-nail-style", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         prompt: `${customPrompt} 参考方向：${baseStyle.name || "显白日常款"}。`,
         btiResult: state.btiResult,
-        handImage: state.handImage || undefined,
+        handImage: handImage || undefined,
       }),
     });
     if (result?.success !== true || !result.style) {
