@@ -7,7 +7,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://nail123-backend-1p7l8326b-yujie246s-projects.vercel.app/api/:path*"
+      "destination": "https://nail123-backend.vercel.app/api/:path*"
     }
   ]
 }
